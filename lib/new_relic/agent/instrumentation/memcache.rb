@@ -42,17 +42,28 @@ module NewRelic
               define_method method_name do |*args, &block|
                 metrics = Datastores::MetricHelper.metrics_for("Memcached", method_name)
 
+                a = Time.now
+                b = nil
+                c = nil
+                d = nil
+                e = nil
                 NewRelic::Agent::MethodTracer.trace_execution_scoped(metrics) do
                   t0 = Time.now
                   begin
+                    b = Time.now
                     send method_name_without, *args, &block
+                    c = Time.now
                   ensure
+                    d = Time.now
                     if NewRelic::Agent.config[:capture_memcache_keys]
                       NewRelic::Agent.instance.transaction_sampler.notice_nosql(args.first.inspect, (Time.now - t0).to_f) rescue nil
                     end
+                    e = Time.now
                   end
+                  f = Time.now
                 end
               end
+              NewRelic::Agent.logger.warn("NEWRELIC-RT is: #{b-a} #{c-b} #{d-c} #{e-d} #{f-e}")
 
               send visibility, method_name
               send visibility, method_name_without
