@@ -47,6 +47,7 @@ module NewRelic
                 c = nil
                 d = nil
                 e = nil
+                f = nil
                 NewRelic::Agent::MethodTracer.trace_execution_scoped(metrics) do
                   t0 = Time.now
                   begin
@@ -62,8 +63,8 @@ module NewRelic
                   end
                   f = Time.now
                 end
+                ::NewRelic::Agent.logger.warn("NEWRELIC-RT is: #{b-a} #{c-b} #{d-c} #{e-d} #{f-e}")
               end
-              NewRelic::Agent.logger.warn("NEWRELIC-RT is: #{b-a} #{c-b} #{d-c} #{e-d} #{f-e}")
 
               send visibility, method_name
               send visibility, method_name_without
