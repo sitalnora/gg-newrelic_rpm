@@ -48,6 +48,7 @@ module NewRelic
                 d = nil
                 e = nil
                 f = nil
+                res = nil
                 NewRelic::Agent::MethodTracer.trace_execution_scoped(metrics) do
                   t0 = Time.now
                   begin
@@ -56,14 +57,15 @@ module NewRelic
                     c = Time.now
                   ensure
                     d = Time.now
-                    if NewRelic::Agent.config[:capture_memcache_keys]
+                    res = if NewRelic::Agent.config[:capture_memcache_keys]
                       NewRelic::Agent.instance.transaction_sampler.notice_nosql(args.first.inspect, (Time.now - t0).to_f) rescue nil
                     end
                     e = Time.now
                   end
                   f = Time.now
                 end
-                ::NewRelic::Agent.logger.warn("NEWRELIC-RT is: #{b-a} #{c-b} #{d-c} #{e-d} #{f-e}")
+                Rails.logger.warn("NEWRELIC-RT is: #{b-a} #{c-b} #{d-c} #{e-d} #{f-e}") if defined?(Rails) && defined?(Rails.logger) && args[0].include?('marketing-website-index')
+                res
               end
 
               send visibility, method_name
