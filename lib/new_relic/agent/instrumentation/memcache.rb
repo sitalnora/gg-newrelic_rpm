@@ -64,7 +64,7 @@ module NewRelic
                   end
                   f = Time.now
                 end
-                Rails.logger.warn("NEWRELIC-RT is: #{b-a} #{c-b} #{d-c} #{e-d} #{f-e}") if defined?(Rails) && defined?(Rails.logger) && args[0].include?('marketing-website-index')
+                Rails.logger.warn("NEWRELIC-RT is: #{b-a} #{c-b} #{d-c} #{e-d} #{f-e} #{args[0]}") if defined?(Rails) && defined?(Rails.logger) && (args[0].include?('marketing-website-index') || args[0].include?('marketing-website-seo-tags'))
                 res
               end
 
